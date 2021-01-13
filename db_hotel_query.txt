@@ -109,7 +109,11 @@ WHERE name LIKE 'D%';
 
 
 
-● Quanti paganti sono anche ospiti?
+● (8) Quanti paganti sono anche ospiti?
+
+SELECT *
+FROM `paganti`
+WHERE ospite_id IS NOT NULL;
 
 
 
