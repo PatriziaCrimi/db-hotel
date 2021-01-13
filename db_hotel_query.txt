@@ -1,5 +1,4 @@
-● (1) Seleziona tutti gli ospiti che sono stati identificati con la carta di
-identità
+● (1) Seleziona tutti gli ospiti che sono stati identificati con la carta di identità
 
 
 ----- OPTION 1 -----
@@ -63,29 +62,39 @@ WHERE YEAR(date_of_birth) > 1988;
 
 
 
-● Seleziona tutti gli ospiti che hanno più di 20 anni (al momento
-dell’esecuzione della query)
+● (3) Seleziona tutti gli ospiti che hanno più di 20 anni (al momento dell’esecuzione della query)
 
 
 ----- OPTION 1 -----
+// 22 risultati --> NON comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
 
 SELECT *
 FROM `ospiti`
-WHERE ***CURRENTYEAR*** - YEAR(date_of_birth) > 20;
+WHERE TIMESTAMPDIFF( YEAR, date_of_birth, CURDATE() ) > 20;
 
 
 ----- OPTION 2 -----
+// 22 risultati --> NON comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
 
 SELECT *
 FROM `ospiti`
-WHERE DATEDIFF ( YEAR, date_of_birth , ***CURRENTFULLDATE*** ) > 20;
+WHERE TIMESTAMPDIFF( YEAR, date_of_birth, CURRENT_DATE ) > 20;
 
 
 ----- OPTION 3 -----
+//24 risultati --> comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
 
 SELECT *
 FROM `ospiti`
-WHERE TIMESTAMPDIFF( YEAR, date_of_birth, ***CURRENTFULLDATE*** ) > 20;
+WHERE YEAR(CURDATE()) - YEAR(date_of_birth) > 20;
+
+
+----- OPTION 4 -----
+//24 risultati --> comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
+
+SELECT *
+FROM `ospiti`
+WHERE YEAR(CURRENT_DATE) - YEAR(date_of_birth) > 20;
 
 
 
