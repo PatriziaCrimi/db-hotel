@@ -192,9 +192,24 @@ WHERE status = 'accepted';
 
 
 ● (6) Qual è il prezzo massimo pagato?
+// ATTENZIONE! Non solo il prezzo massimo ma quello massimo PAGATO (ossia 'accepted')
 
-SELECT MAX(price)
-FROM `pagamenti`;
+
+----- OPTION 1 -----
+
+SELECT MAX(price) AS 'highest price'
+FROM `pagamenti`
+WHERE status = 'accepted';
+
+
+----- OPTION 2 -----
+// Ordinare i risultati in ordine discendente DESC ma mostrare solo il primo risultato usando LIMIT 1 (dove 1 è il numero massimo di risultati che voglio visualizzare)
+
+SELECT `price`
+FROM `pagamenti`
+WHERE status = 'accepted'
+ORDER BY price DESC
+LIMIT 1;
 
 
 
