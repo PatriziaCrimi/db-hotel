@@ -82,7 +82,7 @@ ON ospiti.id = prenotazioni_has_ospiti.ospite_id;
 
 ● (3) Stampare Nome, Cognome, Prezzo e Pagante per tutte le prenotazioni fatte a Maggio 2018
 
------ OPTION 1 -----
+----- OPTION 1A -----
 
 SELECT ospiti.name AS 'nome ospite', ospiti.lastname AS 'cognome ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', prenotazioni_has_ospiti.prenotazione_id AS 'numero prenotazione'
 FROM `ospiti`
@@ -98,7 +98,7 @@ WHERE MONTH(prenotazioni.created_at) = 05
 AND YEAR(prenotazioni.created_at) = 2018;
 
 
------ OPTION 2 -----
+----- OPTION 1B -----
 
 SELECT ospiti.name AS 'nome ospite', ospiti.lastname AS 'cognome ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', prenotazioni_has_ospiti.prenotazione_id AS 'numero prenotazione'
 FROM `ospiti`
@@ -112,6 +112,37 @@ INNER JOIN `prenotazioni`
 ON pagamenti.prenotazione_id = prenotazioni.id
 WHERE EXTRACT(MONTH FROM prenotazioni.created_at) = 05
 AND EXTRACT(YEAR FROM prenotazioni.created_at) = 2018;
+
+
+----- OPTION 2 -----
+
+SELECT ospiti.name AS 'nome ospite', ospiti.lastname AS 'cognome ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', prenotazioni_has_ospiti.prenotazione_id AS 'numero prenotazione'
+FROM `ospiti`
+INNER JOIN `prenotazioni_has_ospiti`
+ON ospiti.id = prenotazioni_has_ospiti.ospite_id
+INNER JOIN `pagamenti`
+ON prenotazioni_has_ospiti.prenotazione_id = pagamenti.prenotazione_id
+INNER JOIN `paganti`
+ON pagamenti.pagante_id = paganti.id
+INNER JOIN `prenotazioni`
+ON pagamenti.prenotazione_id = prenotazioni.id
+WHERE prenotazioni.created_at BETWEEN '2018-05-01' AND '2018-05-31';
+
+
+----- OPTION 3 -----
+// EXTRACT(YEAR_MONTH) restituisce solo numeri senza dividerli con i trattini
+
+SELECT ospiti.name AS 'nome ospite', ospiti.lastname AS 'cognome ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', prenotazioni_has_ospiti.prenotazione_id AS 'numero prenotazione'
+FROM `ospiti`
+INNER JOIN `prenotazioni_has_ospiti`
+ON ospiti.id = prenotazioni_has_ospiti.ospite_id
+INNER JOIN `pagamenti`
+ON prenotazioni_has_ospiti.prenotazione_id = pagamenti.prenotazione_id
+INNER JOIN `paganti`
+ON pagamenti.pagante_id = paganti.id
+INNER JOIN `prenotazioni`
+ON pagamenti.prenotazione_id = prenotazioni.id
+WHERE EXTRACT(YEAR_MONTH FROM prenotazioni.created_at) = 201805;
 
 
 
@@ -130,7 +161,7 @@ AND pagamenti.status = 'accepted';
 
 ● (5) Prendi i dati di fatturazione per la prenotazione con id=7
 
-SELECT paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', paganti.address AS 'indirizzo fatturazione', pagamenti.price AS 'importo', paganti.created_at AS 'data fatturazione'
+SELECT paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', paganti.address AS 'indirizzo fatturazione', pagamenti.price AS 'importo', paganti.created_at AS 'data pagamento'
 FROM `prenotazioni`
 INNER JOIN `pagamenti`
 ON prenotazioni.id = pagamenti.prenotazione_id
@@ -143,7 +174,20 @@ WHERE prenotazioni.id = 7;
 ● (6) Le stanze sono state tutte prenotate almeno una volta?
 // Visualizzare le stanze non ancora prenotate
 
-SELECT
+
+----- OPTION 1 -----
+
+SELECT stanze.id AS 'identificativo camera', stanze.room_number AS 'numero camera', prenotazioni.id 'numero prenotazioni'
 FROM `prenotazioni`
-INNER JOIN `stanze`
-ON prenotazione.id = ;
+RIGHT JOIN `stanze`
+ON prenotazioni.stanza_id = stanze.id
+WHERE prenotazioni.stanza_id IS NULL;
+
+
+----- OPTION 2 -----
+
+SELECT stanze.id AS 'identificativo camera', stanze.room_number AS 'numero camera', prenotazioni.id 'numero prenotazioni'
+FROM `stanze`
+LEFT JOIN `prenotazioni`
+ON prenotazioni.stanza_id = stanze.id
+WHERE prenotazioni.stanza_id IS NULL;
