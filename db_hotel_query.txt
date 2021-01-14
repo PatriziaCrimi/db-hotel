@@ -18,54 +18,67 @@ WHERE document_type = 'CI';
 
 ● (2) Seleziona tutti gli ospiti che sono nati dopo il 1988
 
-
------ OPTION 1 -----
+----- OPTION 1A -----
 
 SELECT *
 FROM `ospiti`
-WHERE date_of_birth > '1988-12-31';
+WHERE YEAR(date_of_birth) > 1988;
 
 
 ----- OPTION 1B -----
 
 SELECT `name`, `lastname`, `date_of_birth`
 FROM `ospiti`
-WHERE date_of_birth > '1988-12-31';
+WHERE YEAR(date_of_birth) > 1988;
 
 
 ----- OPTION 2A -----
 
 SELECT *
 FROM `ospiti`
-WHERE date_of_birth >= '1989-01-01';
+WHERE date_of_birth > '1988-%';
 
 
 ----- OPTION 2B -----
 
-SELECT `name`, `lastname`, `date_of_birth`
+SELECT *
 FROM `ospiti`
-WHERE date_of_birth >= '1989-01-01';
+WHERE date_of_birth >= '1989-%';
 
 
 ----- OPTION 3A -----
 
 SELECT *
 FROM `ospiti`
-WHERE YEAR(date_of_birth) > 1988;
+WHERE date_of_birth > '1988-12-31';
 
 
 ----- OPTION 3B -----
 
 SELECT `name`, `lastname`, `date_of_birth`
 FROM `ospiti`
-WHERE YEAR(date_of_birth) > 1988;
+WHERE date_of_birth > '1988-12-31';
+
+
+----- OPTION 4A -----
+
+SELECT *
+FROM `ospiti`
+WHERE date_of_birth >= '1989-01-01';
+
+
+----- OPTION 4B -----
+
+SELECT `name`, `lastname`, `date_of_birth`
+FROM `ospiti`
+WHERE date_of_birth >= '1989-01-01';
 
 
 
 ● (3) Seleziona tutti gli ospiti che hanno più di 20 anni (al momento dell’esecuzione della query)
 
 
------ OPTION 1 -----
+----- OPTION 1A -----
 // 22 risultati --> NON comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
 
 SELECT *
@@ -73,7 +86,7 @@ FROM `ospiti`
 WHERE TIMESTAMPDIFF( YEAR, date_of_birth, CURDATE() ) > 20;
 
 
------ OPTION 2 -----
+----- OPTION 1B -----
 // 22 risultati --> NON comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
 
 SELECT *
@@ -81,7 +94,39 @@ FROM `ospiti`
 WHERE TIMESTAMPDIFF( YEAR, date_of_birth, CURRENT_DATE ) > 20;
 
 
------ OPTION 3 -----
+----- OPTION 1C -----
+// 22 risultati --> NON comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
+
+SELECT *
+FROM `ospiti`
+WHERE TIMESTAMPDIFF( YEAR, date_of_birth, NOW() ) > 20;
+
+
+----- OPTION 2A -----
+// 22 risultati --> NON comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
+
+SELECT *
+FROM `ospiti`
+WHERE date_of_birth < SUBDATE(CURDATE(), INTERVAL 21 YEAR);
+
+
+----- OPTION 2B -----
+// 22 risultati --> NON comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
+
+SELECT *
+FROM `ospiti`
+WHERE date_of_birth < SUBDATE(CURRENT_DATE, INTERVAL 21 YEAR);
+
+
+----- OPTION 2B -----
+// 22 risultati --> NON comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
+
+SELECT *
+FROM `ospiti`
+WHERE date_of_birth < SUBDATE(NOW(), INTERVAL 21 YEAR);
+
+
+----- OPTION 3A -----
 //24 risultati --> comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
 
 SELECT *
@@ -89,7 +134,7 @@ FROM `ospiti`
 WHERE YEAR(CURDATE()) - YEAR(date_of_birth) > 20;
 
 
------ OPTION 4 -----
+----- OPTION 3B -----
 //24 risultati --> comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
 
 SELECT *
@@ -97,8 +142,16 @@ FROM `ospiti`
 WHERE YEAR(CURRENT_DATE) - YEAR(date_of_birth) > 20;
 
 
+----- OPTION 3C -----
+//24 risultati --> comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
+
+SELECT *
+FROM `ospiti`
+WHERE YEAR(NOW()) - YEAR(date_of_birth) > 20;
+
 
 ● (4) Seleziona tutti gli ospiti il cui nome inizia con la D
+// MySQL è case insensitive quindi si può indicare sia 'd%' sia '%D'
 
 SELECT *
 FROM `ospiti`
