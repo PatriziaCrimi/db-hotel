@@ -215,23 +215,56 @@ LIMIT 1;
 
 ● (7) Seleziona gli ospiti riconosciuti con patente e nati nel 1975
 
+
+----- OPTION 1 -----
+
 SELECT *
 FROM `ospiti`
 WHERE document_type = 'Driver License'
 AND YEAR(date_of_birth) = 1975;
 
 
-
-● (8) Quanti paganti sono anche ospiti?
+----- OPTION 2 -----
+// BETWEEN indica un intervallo con gli estremi COMPRESI 
 
 SELECT *
+FROM `ospiti`
+WHERE document_type = 'Driver License'
+AND date_of_birth BETWEEN '1975-01-01' AND '1975-12-31';
+
+
+
+● (8) Quanti paganti sono anche ospiti?
+// # si usa per i commenti nel linguaggio SQL
+
+
+----- OPTION 1 -----
+// COUNT(*) conta le righe quindi devo imporre il WHERE
+
+SELECT COUNT(*) AS 'numero_ospiti_paganti'
 FROM `paganti`
 WHERE ospite_id IS NOT NULL;
+
+
+----- OPTION 2 -----
+// COUNT(ospite_id) conta solo le righe nella colonna 'ospite_id' in cui ci sia effettivamente un valore inserito (NOT NULL) e quindi il WHERE è implicito
+
+SELECT COUNT(ospite_id) AS 'numero_ospiti_paganti'
+FROM `paganti`;
+
+
+----- OPTION 3 -----
+// DISTINCT non conta i valori doppi ma li conta una volta sola
+// Anche in questo caso il WHERE è implicito ma è sempre consigliato metterlo
+
+SELECT COUNT(DISTINCT(ospite_id)) AS 'numero_ospiti_paganti'
+FROM `paganti`
+#WHERE ospite_id IS NOT NULL;
 
 
 
 ● (9) Quanti posti letto ha l’hotel in totale?
 
-SELECT SUM(beds)
+SELECT SUM(beds) AS 'totale posti_letto'
 FROM `stanze`;
 
