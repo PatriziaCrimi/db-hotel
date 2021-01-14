@@ -118,7 +118,7 @@ FROM `ospiti`
 WHERE date_of_birth < SUBDATE(CURRENT_DATE, INTERVAL 21 YEAR);
 
 
------ OPTION 2B -----
+----- OPTION 2C -----
 // 22 risultati --> NON comprende due nati nel 2000 ma nei mesi di Febbraio e Settembre (ancora ventenni)
 
 SELECT *
@@ -150,18 +150,42 @@ FROM `ospiti`
 WHERE YEAR(NOW()) - YEAR(date_of_birth) > 20;
 
 
+
 ● (4) Seleziona tutti gli ospiti il cui nome inizia con la D
 // MySQL è case insensitive quindi si può indicare sia 'd%' sia '%D'
+
+
+----- OPTION 1 -----
 
 SELECT *
 FROM `ospiti`
 WHERE name LIKE 'D%';
 
 
+----- OPTION 2 -----
+// LOCATE lavora con l'indice: il numero 1 è l'indice al quale voglio trovare la lettera 'd' dentro alla stringa 'name' 
 
-● (5) Calcola il totale degli ordini accepted
+SELECT *
+FROM `ospiti`
+WHERE LOCATE('d', 'name') = 1;
+
+
+
+● (5) Calcola il numero totale degli ordini accepted
+
+
+----- OPTION 1 -----
+// Calcola il NUMERO totale degli ordini accepted
 
 SELECT COUNT(id)
+FROM `pagamenti`
+WHERE status = 'accepted';
+
+
+----- OPTION 2 -----
+// Calcola il totale INCASSATO degli ordini accepted
+
+SELECT SUM(price) AS 'totale'
 FROM `pagamenti`
 WHERE status = 'accepted';
 
