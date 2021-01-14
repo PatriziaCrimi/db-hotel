@@ -73,6 +73,12 @@ ORDER BY numero_prenotazioni DESC;
 
 ● (2) Stampare tutti gli ospiti per ogni prenotazione
 
+SELECT ospiti.name AS 'nome', ospiti.lastname AS 'cognome', prenotazioni_has_ospiti.prenotazione_id
+FROM `ospiti`
+INNER JOIN `prenotazioni_has_ospiti`
+ON ospiti.id = prenotazioni_has_ospiti.ospite_id;
+
+
 
 ● (3) Stampare Nome, Cognome, Prezzo e Pagante per tutte le prenotazioni fatte a Maggio 2018
 
