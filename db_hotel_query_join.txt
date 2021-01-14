@@ -130,7 +130,20 @@ AND pagamenti.status = 'accepted';
 
 ● (5) Prendi i dati di fatturazione per la prenotazione con id=7
 
+SELECT paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', paganti.address AS 'indirizzo fatturazione', pagamenti.price AS 'importo', paganti.created_at AS 'data fatturazione'
+FROM `prenotazioni`
+INNER JOIN `pagamenti`
+ON prenotazioni.id = pagamenti.prenotazione_id
+INNER JOIN `paganti`
+ON pagamenti.pagante_id = paganti.id
+WHERE prenotazioni.id = 7;
+
 
 
 ● (6) Le stanze sono state tutte prenotate almeno una volta?
 // Visualizzare le stanze non ancora prenotate
+
+SELECT
+FROM `prenotazioni`
+INNER JOIN `stanze`
+ON prenotazione.id = ;
