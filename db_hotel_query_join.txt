@@ -86,64 +86,64 @@ ORDER BY identificativo_prenotazione;
 
 ----- OPTION 1A -----
 
-SELECT ospiti.name AS 'nome_ospite', ospiti.lastname AS 'cognome_ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome_pagante', paganti.lastname AS 'cognome_pagante', prenotazioni_has_ospiti.prenotazione_id AS 'numero_prenotazione'
-FROM `ospiti`
-INNER JOIN `prenotazioni_has_ospiti`
-ON ospiti.id = prenotazioni_has_ospiti.ospite_id
+SELECT ospiti.name AS 'nome_ospite', ospiti.lastname AS 'cognome_ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome_pagante', paganti.lastname AS 'cognome_pagante' 
+FROM `paganti`
 INNER JOIN `pagamenti`
-ON prenotazioni_has_ospiti.prenotazione_id = pagamenti.prenotazione_id
-INNER JOIN `paganti`
-ON pagamenti.pagante_id = paganti.id
+ON paganti.id = pagamenti.pagante_id
 INNER JOIN `prenotazioni`
 ON pagamenti.prenotazione_id = prenotazioni.id
+INNER JOIN `prenotazioni_has_ospiti`
+ON prenotazioni.id = prenotazioni_has_ospiti.prenotazione_id
+INNER JOIN `ospiti`
+ON prenotazioni_has_ospiti.ospite_id = ospiti.id
 WHERE MONTH(prenotazioni.created_at) = 05
 AND YEAR(prenotazioni.created_at) = 2018;
 
 
 ----- OPTION 1B -----
 
-SELECT ospiti.name AS 'nome ospite', ospiti.lastname AS 'cognome ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', prenotazioni_has_ospiti.prenotazione_id AS 'numero prenotazione'
-FROM `ospiti`
-INNER JOIN `prenotazioni_has_ospiti`
-ON ospiti.id = prenotazioni_has_ospiti.ospite_id
+SELECT ospiti.name AS 'nome_ospite', ospiti.lastname AS 'cognome_ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome_pagante', paganti.lastname AS 'cognome_pagante' 
+FROM `paganti`
 INNER JOIN `pagamenti`
-ON prenotazioni_has_ospiti.prenotazione_id = pagamenti.prenotazione_id
-INNER JOIN `paganti`
-ON pagamenti.pagante_id = paganti.id
+ON paganti.id = pagamenti.pagante_id
 INNER JOIN `prenotazioni`
 ON pagamenti.prenotazione_id = prenotazioni.id
+INNER JOIN `prenotazioni_has_ospiti`
+ON prenotazioni.id = prenotazioni_has_ospiti.prenotazione_id
+INNER JOIN `ospiti`
+ON prenotazioni_has_ospiti.ospite_id = ospiti.id
 WHERE EXTRACT(MONTH FROM prenotazioni.created_at) = 05
 AND EXTRACT(YEAR FROM prenotazioni.created_at) = 2018;
 
 
 ----- OPTION 2 -----
 
-SELECT ospiti.name AS 'nome ospite', ospiti.lastname AS 'cognome ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', prenotazioni_has_ospiti.prenotazione_id AS 'numero prenotazione'
-FROM `ospiti`
-INNER JOIN `prenotazioni_has_ospiti`
-ON ospiti.id = prenotazioni_has_ospiti.ospite_id
+SELECT ospiti.name AS 'nome_ospite', ospiti.lastname AS 'cognome_ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome_pagante', paganti.lastname AS 'cognome_pagante' 
+FROM `paganti`
 INNER JOIN `pagamenti`
-ON prenotazioni_has_ospiti.prenotazione_id = pagamenti.prenotazione_id
-INNER JOIN `paganti`
-ON pagamenti.pagante_id = paganti.id
+ON paganti.id = pagamenti.pagante_id
 INNER JOIN `prenotazioni`
 ON pagamenti.prenotazione_id = prenotazioni.id
+INNER JOIN `prenotazioni_has_ospiti`
+ON prenotazioni.id = prenotazioni_has_ospiti.prenotazione_id
+INNER JOIN `ospiti`
+ON prenotazioni_has_ospiti.ospite_id = ospiti.id
 WHERE prenotazioni.created_at BETWEEN '2018-05-01' AND '2018-05-31';
 
 
 ----- OPTION 3 -----
 // EXTRACT(YEAR_MONTH) restituisce solo numeri senza dividerli con i trattini
 
-SELECT ospiti.name AS 'nome ospite', ospiti.lastname AS 'cognome ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', prenotazioni_has_ospiti.prenotazione_id AS 'numero prenotazione'
-FROM `ospiti`
-INNER JOIN `prenotazioni_has_ospiti`
-ON ospiti.id = prenotazioni_has_ospiti.ospite_id
+SELECT ospiti.name AS 'nome_ospite', ospiti.lastname AS 'cognome_ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome_pagante', paganti.lastname AS 'cognome_pagante' 
+FROM `paganti`
 INNER JOIN `pagamenti`
-ON prenotazioni_has_ospiti.prenotazione_id = pagamenti.prenotazione_id
-INNER JOIN `paganti`
-ON pagamenti.pagante_id = paganti.id
+ON paganti.id = pagamenti.pagante_id
 INNER JOIN `prenotazioni`
 ON pagamenti.prenotazione_id = prenotazioni.id
+INNER JOIN `prenotazioni_has_ospiti`
+ON prenotazioni.id = prenotazioni_has_ospiti.prenotazione_id
+INNER JOIN `ospiti`
+ON prenotazioni_has_ospiti.ospite_id = ospiti.id
 WHERE EXTRACT(YEAR_MONTH FROM prenotazioni.created_at) = 201805;
 
 
