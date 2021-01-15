@@ -2,28 +2,28 @@
 
 ● (1) Conta gli ospiti raggruppandoli per anno di nascita
 
-SELECT COUNT(id) AS 'numero ospiti', YEAR(`date_of_birth`) AS 'anno di nascita'
+SELECT COUNT(id) AS 'numero_ospiti', YEAR(`date_of_birth`) AS 'anno_di_nascita'
 FROM `ospiti`
-GROUP BY YEAR(`date_of_birth`)
-ORDER BY COUNT(id);
+GROUP BY anno_di_nascita
+ORDER BY numero_ospiti;
 
 
 
 ● (2) Somma i prezzi dei pagamenti raggruppandoli per status
 
-SELECT SUM(`price`) AS 'importo totale', `status` AS 'stato dei pagamenti'
+SELECT SUM(`price`) AS 'importo_totale', `status` AS 'stato_pagamenti'
 FROM `pagamenti`
 GROUP BY `status`
-ORDER BY SUM(`price`);
+ORDER BY importo_totale;
 
 
 
 ● (3) Conta quante volte è stata prenotata ogni stanza
 
-SELECT COUNT(`stanza_id`) AS 'numero prenotazioni', `stanza_id` AS 'numero stanza'
+SELECT COUNT(`stanza_id`) AS 'numero_prenotazioni', `stanza_id` AS 'numero_stanza'
 FROM `prenotazioni`
 GROUP BY `stanza_id`
-ORDER BY COUNT(`stanza_id`);
+ORDER BY numero_prenotazioni;
 
 
 
@@ -32,28 +32,29 @@ ORDER BY COUNT(`stanza_id`);
 
 ----- OPTION 1 -----
 
-SELECT COUNT(`created_at`) AS 'numero prenotazioni', HOUR(`created_at`) AS 'orario prenotazione'
+SELECT COUNT(`created_at`) AS 'numero_prenotazioni', HOUR(`created_at`) AS 'orario_prenotazioni'
 FROM `prenotazioni`
-GROUP BY HOUR(`created_at`)
-ORDER BY COUNT(`created_at`) DESC;
+GROUP BY orario_prenotazioni
+ORDER BY numero_prenotazioni DESC;
 
 
 ----- OPTION 2 -----
 
-SELECT COUNT(`created_at`) AS 'numero prenotazioni', EXTRACT(HOUR FROM `created_at`) AS 'orario prenotazione'
+SELECT COUNT(`created_at`) AS 'numero_prenotazioni', EXTRACT(HOUR FROM `created_at`) AS 'i'
 FROM `prenotazioni`
-GROUP BY EXTRACT(HOUR FROM `created_at`)
-ORDER BY COUNT(`created_at`) DESC;
+GROUP BY orario_prenotazione
+ORDER BY numero_prenotazioni DESC;
 
 
 
 ● (5) Quante prenotazioni ha fatto l’ospite che ha fatto più prenotazioni?
+// Mi interessa sapere QUALE è il NUMERO massimo delle prenotazioni (3) e NON chi le ha fatte, quindi basta mettere LIMITE 1 perché mi basta il primo risultato (se ci sono parimerito non mi interessa)
 
-SELECT COUNT(`ospite_id`) AS 'numero prenotazioni', `ospite_id` AS 'identificativo ospite'
+SELECT COUNT(`ospite_id`) AS 'numero_prenotazioni', `ospite_id` AS 'identificativo_ospite'
 FROM `prenotazioni_has_ospiti`
 GROUP BY `ospite_id`
-ORDER BY COUNT(`ospite_id`) DESC
-LIMIT 2;
+ORDER BY numero_prenotazioni DESC
+LIMIT 1;
 
 
 
@@ -73,10 +74,11 @@ ORDER BY numero_prenotazioni DESC;
 
 ● (2) Stampare tutti gli ospiti per ogni prenotazione
 
-SELECT ospiti.name AS 'nome', ospiti.lastname AS 'cognome', prenotazioni_has_ospiti.prenotazione_id AS 'numero prenotazione'
+SELECT ospiti.name AS 'nome', ospiti.lastname AS 'cognome', prenotazioni_has_ospiti.prenotazione_id AS 'identificativo_prenotazione'
 FROM `ospiti`
 INNER JOIN `prenotazioni_has_ospiti`
-ON ospiti.id = prenotazioni_has_ospiti.ospite_id;
+ON ospiti.id = prenotazioni_has_ospiti.ospite_id
+ORDER BY identificativo_prenotazione;
 
 
 
@@ -84,7 +86,7 @@ ON ospiti.id = prenotazioni_has_ospiti.ospite_id;
 
 ----- OPTION 1A -----
 
-SELECT ospiti.name AS 'nome ospite', ospiti.lastname AS 'cognome ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome pagante', paganti.lastname AS 'cognome pagante', prenotazioni_has_ospiti.prenotazione_id AS 'numero prenotazione'
+SELECT ospiti.name AS 'nome_ospite', ospiti.lastname AS 'cognome_ospite', pagamenti.price AS 'prezzo', paganti.name AS 'nome_pagante', paganti.lastname AS 'cognome_pagante', prenotazioni_has_ospiti.prenotazione_id AS 'numero_prenotazione'
 FROM `ospiti`
 INNER JOIN `prenotazioni_has_ospiti`
 ON ospiti.id = prenotazioni_has_ospiti.ospite_id
@@ -148,7 +150,7 @@ WHERE EXTRACT(YEAR_MONTH FROM prenotazioni.created_at) = 201805;
 
 ● (4) Fai la somma di tutti i prezzi delle prenotazioni per le stanze del primo piano
 
-SELECT SUM(pagamenti.price) AS 'totale prezzi prenotazioni stanze primo piano'
+SELECT SUM(pagamenti.price) AS 'totale_prezzi_primo_piano'
 FROM `pagamenti`
 INNER JOIN `prenotazioni`
 ON pagamenti.prenotazione_id = prenotazioni.id
@@ -177,17 +179,17 @@ WHERE prenotazioni.id = 7;
 
 ----- OPTION 1 -----
 
-SELECT stanze.id AS 'identificativo camera', stanze.room_number AS 'numero camera', prenotazioni.id 'numero prenotazioni'
-FROM `prenotazioni`
-RIGHT JOIN `stanze`
+SELECT stanze.id AS 'identificativo_camera', stanze.room_number AS 'numero_camera', prenotazioni.id 'numero_prenotazioni'
+FROM `stanze`
+LEFT JOIN `prenotazioni`
 ON prenotazioni.stanza_id = stanze.id
 WHERE prenotazioni.stanza_id IS NULL;
 
 
 ----- OPTION 2 -----
 
-SELECT stanze.id AS 'identificativo camera', stanze.room_number AS 'numero camera', prenotazioni.id 'numero prenotazioni'
-FROM `stanze`
-LEFT JOIN `prenotazioni`
+SELECT stanze.id AS 'identificativo_camera', stanze.room_number AS 'numero_camera', prenotazioni.id 'numero_prenotazioni'
+FROM `prenotazioni`
+RIGHT JOIN `stanze`
 ON prenotazioni.stanza_id = stanze.id
 WHERE prenotazioni.stanza_id IS NULL;
